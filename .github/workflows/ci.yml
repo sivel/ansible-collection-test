@@ -30,7 +30,7 @@ jobs:
       - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
         name: Install deps
         run: |
-          ansible-galaxy collection install -p . requirements.yml
+          ansible-galaxy collection install -p . -r requirements.yml
 
       - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
         name: Cache deps
