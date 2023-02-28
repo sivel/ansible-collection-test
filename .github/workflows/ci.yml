@@ -10,6 +10,11 @@ jobs:
   integration:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: test
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -30,7 +35,7 @@ jobs:
       - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
         name: Install deps
         run: |
-          ansible-galaxy collection install -p . -r requirements.yml
+          ansible-galaxy collection install -p . -r test/requirements.yml
 
       - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
         name: Cache deps
@@ -39,10 +44,10 @@ jobs:
           path: ansible_collections/
           key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
 
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          path: ansible_collections/sivel/test
+      - name: Move repo
+        run: |
+          mkdir -p ansible_collections/sivel
+          mv test ansible_collections/sivel
 
       - name: Debug test env
         run: |
