@@ -33,7 +33,7 @@ jobs:
           key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
 
       - run: |
-          echo "Output [${{ steps.cache_ansible_collections.outputs }}]"
+          echo 'Output [${{ toJSON(steps.cache_ansible_collections.outputs) }}]'
 
       - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
         name: Install deps
