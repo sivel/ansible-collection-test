@@ -56,5 +56,5 @@ jobs:
 
       - name: Run integration tests
         run: |
-          ansible-test integration --docker fedora37 -v
+          ansible-test integration --docker fedora36 -v
         working-directory: ./ansible_collections/sivel/test
