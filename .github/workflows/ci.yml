@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+  schedule:
+    - cron: '0 15 * * *'
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install ansible-core
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core
+
+      - name: Restore deps
+        uses: actions/cache/restore@v3
+        id: cache_ansible_collections
+        with:
+          path: ansible_collections/
+          key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
+
+      - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
+        name: Install deps
+        run: |
+          ansible-galaxy collection install -p . requirements.yml
+
+      - if: ${{ steps.cache_ansible_collections.outputs.cache-hit != 'true' }}
+        name: Cache deps
+        uses: actions/cache/save@v3
+        with:
+          path: ansible_collections/
+          key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: ansible_collections/sivel/test
+
+      - name: Debug test env
+        run: |
+          ansible-test env
+        working-directory: ./ansible_collections/sivel/test
+
+      - name: Run integration tests
+        run: |
+          ansible-test integration --docker fedora37 -v
+        working-directory: ./ansible_collections/sivel/test

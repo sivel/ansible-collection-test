@@ -1,0 +1,13 @@
+namespace: "sivel"
+name: "test"
+version: "0.0.1"
+readme: "README.md"
+authors:
+    - "sivel <matt@sivel.net>"
+license:
+    - "GPL-3.0-or-later"
+repository: "https://github.com/sivel/ansible-collection-test"
+description: test collection
+manifest:
+dependencies:
+    - sivel.toiletwater
