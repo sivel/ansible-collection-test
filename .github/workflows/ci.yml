@@ -30,7 +30,7 @@ jobs:
         id: cache_ansible_collections
         with:
           path: ansible_collections/
-          key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
+          key: cache_ansible_collections
 
       - run: |
           echo 'Output [${{ toJSON(steps.cache_ansible_collections.outputs) }}]'
@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: ansible_collections/
-          key: cache_ansible_collections_${{ hashFiles('**/MANIFEST.json') }}
+          key: cache_ansible_collections
 
       - name: Move repo
         run: |
